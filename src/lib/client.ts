@@ -10,29 +10,24 @@ const getBaseUrl = () => {
     return ""
   }
 
-  if (process.env.NODE_ENV === "development") {
-    return "http://localhost:3000/"
-  }
-
-  // if deployed to vercel, use vercel url
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`
-  }
-
-  // assume deployment to cloudflare workers otherwise, you'll get this URL after running
-  // `npm run deploy`, which deploys your server to cloudflare
-  return "https://<YOUR_DEPLOYED_WORKER_URL>/"
+  return process.env.NODE_ENV === "development"
+    ? "http://localhost:3000/"
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://<YOUR_DEPLOYED_WORKER_URL>/"
 }
 
 export const baseClient = hc<AppType>(getBaseUrl(), {
   fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     const response = await fetch(input, { ...init, cache: "no-store" })
+    
 
     if (!response.ok) {
-      throw new HTTPException(response.status as StatusCode, {
-        message: response.statusText,
-        res: response,
-      })
+      // @ts-ignore
+    throw new HTTPException(response.status as StatusCode, {
+      message: response.statusText,
+      res: response,
+    });
     }
 
     const contentType = response.headers.get("Content-Type")

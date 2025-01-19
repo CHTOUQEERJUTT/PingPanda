@@ -5,9 +5,9 @@ import { LoadingSpinner } from '@/components/loading-spinner'
 import { LucideProps } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { client } from '@/app/lib/client'
+import { client } from '@/lib/client'
 
-function page() {
+function Page() {
 
   const router = useRouter()
   
@@ -140,4 +140,4 @@ const BackgroundPattern = (props: LucideProps) => {
   )
 }
 
-export default page
+export default Page
